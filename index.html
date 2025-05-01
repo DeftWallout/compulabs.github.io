@@ -6,13 +6,13 @@
         body {
       font-family: Arial, sans-serif;
       background-color: #eff3f4;
-      text-align: center;
+      text-align: left;
         }
        
         h2 {
       color: #333;
       margin-top: 10px;
-      text-align: center;
+      text-align: left;
         }
         .code-box {
           background-color: #f7f6f3d6;
@@ -29,6 +29,8 @@
       </style>
       <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 </head>
 <body>
@@ -38,7 +40,12 @@
     dos textos: --> 
     <hr>
     <h2 >Comparación de códigos para integración por método de trapecio</h2>
-    <p>Primordialmente, vamos a analizar el código que tenemos en el libro de <strong>Computational Physics</strong> de Rubin H. Landau, Manuel J. Páez, y Cristian C. Bordeianu:  </p>
+    <p>Primordialmente, vamos a analizar el código que tenemos en el libro de <strong>Computational Physics</strong> de Rubin H. Landau, Manuel J. Páez, y Cristian C. Bordeianu.<br>
+       Para la prueba de este código utilizaremos la función: </p>
+    <div style="text-align:center;">
+        \[ 5x e^3 - 4x + 7 \]
+    </div>
+    <p>Esta función la vamos a evaluar utilizando los dos códigos de programación, con límites de 0 hasta 1 para ambos códigos de programación. El resultado para esta es: 55.21375 </p>
     <div class="code-box">
     <pre>
         <code class="language-python">
@@ -53,17 +60,54 @@
             sum = (func(A)+func(B))/2
             for i in range(1,N-1):
                 sum += func(A+i*h)
-            return h*sum
+          return h*sum
         
-        A = 0
-        B = 1
-        N = 10
-        print(trapezoid(A, B, N-1))
-        #Obteniendo como resultado: 9.283412860620183
+          a = 0
+          b = 1
+          n = 100
+          
+          res1 = trapezoid(func, a, b, n)
+          print("Resultado trapezoid:", res1)
+          #Obteniendo como resultado: 55.21384230796919
         </code>
         </pre>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>      
+    <script>hljs.highlightAll();</script> 
+    <p>Este código es un poco más "sencillo" a comparación del que mostraremos después, sin embargo, es menos eficiente ya que utiliza bucles manuales
+    por otro lado, coincide casi exactamente con el resultado, <br>
+     se sacrifica eficiencia a cambio de exactitud.</p> 
+     <p>Luego, tenemos un código obtenido en clase de Física computacional l utilizando el mismo método y el código es:</p>
+    <div class="code-box">
+    <pre>
+      <code class="language-python"> 
+        from numpy import *
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        def func(x):
+          return 5 * x * exp(3) - 4 * x + 7
+
+        def trapezoid_rule(f, _a, _b, n):
+          x = np.linspace(_a, _b, n + 1, endpoint=False)
+          y = f(x)
+          h = (_b - _a) / n
+          return (h / 2) * (y[0] + 2 * np.sum(y[1:]) + y[-1])
+
+          a = 0
+          b = 1
+          n = 100
+
+
+          res2= trapezoid_rule(func, a, b, n)
+
+          print("Resultado trapezoid_rule:", res2)
+          #Obteniendo como resultado: 55.7612070832956
+      </code>
+    </pre>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <p>Como podemos notar, para este caso este código es más eficiente ya que usa operaciones vectorizadas, sin embargo, aquí pasa al revés, se sacrifica exactitud por eficiencia.</p>    
 </body>
 </html>
